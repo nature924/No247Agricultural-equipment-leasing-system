@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ShebeiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.shebei_name as shebeiName
+        ,a.shebei_uuid_number as shebeiUuidNumber
+        ,a.shebei_photo as shebeiPhoto
+        ,a.shebei_types as shebeiTypes
+        ,a.shebei_kucun_number as shebeiKucunNumber
+        ,a.shebei_old_money as shebeiOldMoney
+        ,a.shebei_new_money as shebeiNewMoney
+        ,a.shebei_clicknum as shebeiClicknum
+        ,a.shebei_content as shebeiContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.shebei_delete as shebeiDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ShebeiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM shebei  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.shebeiName != '' and params.shebeiName != null and params.shebeiName != 'null' ">
+                and a.shebei_name like CONCAT('%',#{params.shebeiName},'%')
+            </if>
+            <if test=" params.shebeiUuidNumber != '' and params.shebeiUuidNumber != null and params.shebeiUuidNumber != 'null' ">
+                and a.shebei_uuid_number like CONCAT('%',#{params.shebeiUuidNumber},'%')
+            </if>
+            <if test="params.shebeiTypes != null and params.shebeiTypes != ''">
+                and a.shebei_types = #{params.shebeiTypes}
+            </if>
+            <if test="params.shebeiKucunNumberStart != null and params.shebeiKucunNumberStart != ''">
+                <![CDATA[  and a.shebei_kucun_number >= #{params.shebeiKucunNumberStart}   ]]>
+            </if>
+            <if test="params.shebeiKucunNumberEnd != null and params.shebeiKucunNumberEnd != ''">
+                <![CDATA[  and a.shebei_kucun_number <= #{params.shebeiKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.shebeiKucunNumber != null and params.shebeiKucunNumber != ''">
+                and a.shebei_kucun_number = #{params.shebeiKucunNumber}
+             </if>
+            <if test="params.shebeiOldMoneyStart != null ">
+                <![CDATA[  and a.shebei_old_money >= #{params.shebeiOldMoneyStart}   ]]>
+            </if>
+            <if test="params.shebeiOldMoneyEnd != null ">
+                <![CDATA[  and a.shebei_old_money <= #{params.shebeiOldMoneyEnd}   ]]>
+            </if>
+            <if test="params.shebeiNewMoneyStart != null ">
+                <![CDATA[  and a.shebei_new_money >= #{params.shebeiNewMoneyStart}   ]]>
+            </if>
+            <if test="params.shebeiNewMoneyEnd != null ">
+                <![CDATA[  and a.shebei_new_money <= #{params.shebeiNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.shebeiClicknumStart != null and params.shebeiClicknumStart != ''">
+                <![CDATA[  and a.shebei_clicknum >= #{params.shebeiClicknumStart}   ]]>
+            </if>
+            <if test="params.shebeiClicknumEnd != null and params.shebeiClicknumEnd != ''">
+                <![CDATA[  and a.shebei_clicknum <= #{params.shebeiClicknumEnd}   ]]>
+            </if>
+             <if test="params.shebeiClicknum != null and params.shebeiClicknum != ''">
+                and a.shebei_clicknum = #{params.shebeiClicknum}
+             </if>
+            <if test=" params.shebeiContent != '' and params.shebeiContent != null and params.shebeiContent != 'null' ">
+                and a.shebei_content like CONCAT('%',#{params.shebeiContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.shebeiDeleteStart != null and params.shebeiDeleteStart != ''">
+                <![CDATA[  and a.shebei_delete >= #{params.shebeiDeleteStart}   ]]>
+            </if>
+            <if test="params.shebeiDeleteEnd != null and params.shebeiDeleteEnd != ''">
+                <![CDATA[  and a.shebei_delete <= #{params.shebeiDeleteEnd}   ]]>
+            </if>
+             <if test="params.shebeiDelete != null and params.shebeiDelete != ''">
+                and a.shebei_delete = #{params.shebeiDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
